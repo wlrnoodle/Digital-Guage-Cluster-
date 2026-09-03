@@ -116,6 +116,10 @@ static lv_obj_t *speed_label;
 #define ADC_WIDTH ADC_WIDTH_BIT_12
 #define ADC_ATTEN ADC_ATTEN_DB_11
 
+/* @TODO:
+ * The following table is based on a linear ohms scale for a STI thermistor. 
+ * Change the values in table to make your own therimistor inorder to work
+*/
 #define TEMP_SENSOR_TABLE_SIZE 9
 const float tempF[] = {
     32, 68, 104, 140, 176, 212, 248, 284, 302

@@ -5,7 +5,6 @@ Commercial use is NOT permitted.
 
 ### *****Please do not use these files to sell this to others.  I made these so that those wanting to modify their dash/cluster dont have to spend an arm and a leg to do so.***** ###
 
-Youtube Tutorial/playlist: https://youtu.be/t7H6pevep40
 
 1. Install [visual studio code](https://code.visualstudio.com/Download)
 2. Install the ESP-IDF extension(shown here: https://www.waveshare.com/wiki/ESP32-P4-WIFI6-Touch-LCD-3.4C#Introduction_to_ESP-IDF_and_Environment_Setup_.28VSCode_Column.29)
@@ -15,16 +14,15 @@ Youtube Tutorial/playlist: https://youtu.be/t7H6pevep40
 4. Plug in Esp32-P4/screen via usb c
 5. Set target device to esp32p4(see "Description of Bottom Toolbar of VSCode User Interface" in the waveshare link above)
 6. Build 
-
 7. Flash
 <br>
 
 
 # CANBUS
-For canbus integration, I have added a few CAN protocols(haltech, hondata, etc).  If you would like more added please join the discord and provide the can protocol and I can add it quickly
+For canbus integration, I have added a few CAN protocols(haltech, hondata, etc). 
 <br>
 <br>
-You will need to purchase a [small can transciever](https://a.co/d/09CiRq2o) for 9$.  With it, you can ignore any other sensor wiring.  If you need help with wiring those two wires, again join the discord.
+You will need to purchase a [small can transciever](https://a.co/d/09CiRq2o) for 9$.  With it, you can ignore any other sensor wiring.
 
 <br>
 Also, the sensor source on line 37 of the main.c file needs to be updated to 
@@ -33,7 +31,7 @@ Also, the sensor source on line 37 of the main.c file needs to be updated to
 ## Issues/bug fixes
 
 ### 4in waveshare round screens
-For 4in round screens, the base tach image needs to be updated as the resolution is 720x720 and not 800x800 like the 3.4in screens.
+For 7in round screens, the base tach image needs to be updated as the resolution is 1280*720. Or to screen of choice being used for the cluster.
 <br>
 To do that, just replace the ui_img_1656279599.c file in main/tach_ui/images with the file found here: https://drive.google.com/file/d/1_PrP6jOna2s5Ua82ol2qqV2OZWf9c4_l/view?usp=sharing
 <br>
