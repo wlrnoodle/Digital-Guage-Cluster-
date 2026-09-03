@@ -30,7 +30,7 @@ Also, the sensor source on line 37 of the main.c file needs to be updated to
 
 ## Issues/bug fixes
 
-### 4in waveshare round screens
+### 7 in waveshare round screens
 For 7in round screens, the base tach image needs to be updated as the resolution is 1280*720. Or to screen of choice being used for the cluster.
 <br>
 To do that, just replace the ui_img_1656279599.c file in main/tach_ui/images with the file found here: https://drive.google.com/file/d/1_PrP6jOna2s5Ua82ol2qqV2OZWf9c4_l/view?usp=sharing
