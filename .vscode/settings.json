@@ -1,0 +1,17 @@
+{
+  "idf.flashType": "UART",
+  "idf.port": "/dev/tty.usbmodem5AAF1871001",
+  "idf.currentSetup": "/Users/noodle/.espressif/v6.1-beta1/esp-idf",
+  "idf.customExtraVars": {
+    "IDF_TARGET": "esp32p4"
+  },
+  "idf.openOcdConfigs": [
+    "board/esp32p4-builtin.cfg"
+  ],
+  "clangd.path": "/Users/noodle/.espressif/tools/esp-clangd/esp-21.1.3_20260408/esp-clangd/bin/clangd",
+  "clangd.arguments": [
+    "--background-index",
+    "--query-driver=**",
+    "--compile-commands-dir=/Users/noodle/Projects/center-cluster-esp32-p4/build"
+  ]
+}
