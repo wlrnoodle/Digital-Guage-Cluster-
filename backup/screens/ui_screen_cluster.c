@@ -5,7 +5,29 @@
 
 #include "../ui.h"
 
-lv_obj_t *ui_screen_cluster = NULL;lv_obj_t *ui_screen_image_rpm = NULL;lv_obj_t *ui_mph_value_ = NULL;lv_obj_t *ui_clock_value_ = NULL;lv_obj_t *ui_background_panel_black = NULL;lv_obj_t *ui_gear_value = NULL;lv_obj_t *ui_signal_left_icon = NULL;lv_obj_t *ui_signal_right_icon = NULL;lv_obj_t *ui_mph_icon = NULL;lv_obj_t *ui_arc_rpm = NULL;lv_obj_t *ui_odometer_value = NULL;lv_obj_t *ui_fuel_icon = NULL;lv_obj_t *ui_bar_fuel = NULL;lv_obj_t *ui_odometer_mi_char = NULL;lv_obj_t *ui_bar_segement_overlay_ = NULL;lv_obj_t *ui_temperature_icon = NULL;lv_obj_t *ui_battery_icon = NULL;lv_obj_t *ui_high_beam_icon = NULL;lv_obj_t *ui_engine_icon_ = NULL;lv_obj_t *ui_oil_icon_ = NULL;lv_obj_t *ui_HESD_icon = NULL;lv_obj_t *ui_temperature_value = NULL;
+lv_obj_t *ui_screen_cluster = NULL;
+lv_obj_t *ui_screen_image_rpm = NULL;
+lv_obj_t *ui_mph_value_ = NULL;
+lv_obj_t *ui_clock_value_ = NULL;
+lv_obj_t *ui_background_panel_black = NULL;
+lv_obj_t *ui_gear_value = NULL;
+lv_obj_t *ui_signal_left_icon = NULL;
+lv_obj_t *ui_signal_right_icon = NULL;
+lv_obj_t *ui_mph_icon = NULL;
+lv_obj_t *ui_arc_rpm = NULL;
+lv_obj_t *ui_odometer_value = NULL;
+lv_obj_t *ui_fuel_icon = NULL;
+lv_obj_t *ui_bar_fuel = NULL;
+lv_obj_t *ui_odometer_mi_char = NULL;
+lv_obj_t *ui_bar_segement_overlay_ = NULL;
+lv_obj_t *ui_temperature_icon = NULL;
+lv_obj_t *ui_battery_icon = NULL;
+lv_obj_t *ui_high_beam_icon = NULL;
+lv_obj_t *ui_engine_icon_ = NULL;
+lv_obj_t *ui_oil_icon_ = NULL;
+lv_obj_t *ui_HESD_icon = NULL;
+lv_obj_t *ui_temperature_value = NULL;
+
 // event funtions
 void ui_event_gear_value( lv_event_t * e) {
     lv_event_code_t event_code = lv_event_get_code(e);
@@ -35,8 +57,8 @@ lv_image_set_src(ui_screen_image_rpm, &ui_img_images_tach_17k_centered_25pct_png
 lv_obj_set_width( ui_screen_image_rpm, LV_SIZE_CONTENT);  /// 1
 lv_obj_set_height( ui_screen_image_rpm, LV_SIZE_CONTENT);   /// 1
 lv_obj_set_align( ui_screen_image_rpm, LV_ALIGN_TOP_RIGHT );
-lv_obj_add_flag( ui_screen_image_rpm, LV_OBJ_FLAG_CLICKABLE );   /// Flags
-lv_obj_remove_flag( ui_screen_image_rpm, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
+//lv_obj_add_flag( ui_screen_image_rpm, LV_OBJ_FLAG_CLICKABLE );   /// Flags
+//lv_obj_remove_flag( ui_screen_image_rpm, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
 
 ui_mph_value_ = lv_label_create(ui_screen_cluster);
 lv_obj_set_width( ui_mph_value_, LV_SIZE_CONTENT);  /// 1
@@ -45,7 +67,7 @@ lv_obj_set_x( ui_mph_value_, 0 );
 lv_obj_set_y( ui_mph_value_, -32 );
 lv_obj_set_align( ui_mph_value_, LV_ALIGN_CENTER );
 lv_label_set_text(ui_mph_value_,"000");
-lv_obj_remove_flag( ui_mph_value_, LV_OBJ_FLAG_PRESS_LOCK );    /// Flags
+//lv_obj_remove_flag( ui_mph_value_, LV_OBJ_FLAG_PRESS_LOCK );    /// Flags
 lv_obj_set_style_text_font(ui_mph_value_, &ui_font_LiberationSansBold170_, LV_PART_MAIN| LV_STATE_DEFAULT);
 
 ui_clock_value_ = lv_label_create(ui_screen_cluster);
@@ -55,7 +77,7 @@ lv_obj_set_x( ui_clock_value_, -509 );
 lv_obj_set_y( ui_clock_value_, 280 );
 lv_obj_set_align( ui_clock_value_, LV_ALIGN_CENTER );
 lv_label_set_text(ui_clock_value_,"0:00");
-lv_obj_remove_flag( ui_clock_value_, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE | LV_OBJ_FLAG_SNAPPABLE );    /// Flags
+//lv_obj_remove_flag( ui_clock_value_, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE | LV_OBJ_FLAG_SNAPPABLE );    /// Flags
 lv_obj_set_style_text_align(ui_clock_value_, LV_TEXT_ALIGN_LEFT, LV_PART_MAIN| LV_STATE_DEFAULT);
 lv_obj_set_style_text_font(ui_clock_value_, &ui_font_LiberstionSansBold_50_, LV_PART_MAIN| LV_STATE_DEFAULT);
 
@@ -109,8 +131,11 @@ lv_label_set_text(ui_signal_right_icon,"");
 lv_obj_set_style_text_color(ui_signal_right_icon, lv_color_hex(0x33FF00), LV_PART_MAIN | LV_STATE_DEFAULT );
 lv_obj_set_style_text_opa(ui_signal_right_icon, 255, LV_PART_MAIN| LV_STATE_DEFAULT);
 lv_obj_set_style_text_font(ui_signal_right_icon, &ui_font_fa_regular_icons_50, LV_PART_MAIN| LV_STATE_DEFAULT);
+
+//@TODO: configure default or disable, along with checked for different color changes
 lv_obj_set_style_text_color(ui_signal_right_icon, lv_color_hex(0x808080), LV_PART_MAIN | LV_STATE_CHECKED );
 lv_obj_set_style_text_opa(ui_signal_right_icon, 255, LV_PART_MAIN| LV_STATE_CHECKED);
+
 lv_obj_set_style_text_color(ui_signal_right_icon, lv_color_hex(0x808080), LV_PART_MAIN | LV_STATE_DISABLED );
 lv_obj_set_style_text_opa(ui_signal_right_icon, 255, LV_PART_MAIN| LV_STATE_DISABLED);
 
@@ -176,7 +201,7 @@ lv_obj_set_height( ui_bar_fuel, 300);
 lv_obj_set_x( ui_bar_fuel, -583 );
 lv_obj_set_y( ui_bar_fuel, 65 );
 lv_obj_set_align( ui_bar_fuel, LV_ALIGN_CENTER );
-lv_obj_remove_flag( ui_bar_fuel, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE | LV_OBJ_FLAG_SNAPPABLE );    /// Flags
+//lv_obj_remove_flag( ui_bar_fuel, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE | LV_OBJ_FLAG_SNAPPABLE );    /// Flags
 lv_obj_set_style_radius(ui_bar_fuel, 0, LV_PART_MAIN| LV_STATE_DEFAULT);
 lv_obj_set_style_bg_color(ui_bar_fuel, lv_color_hex(0x808080), LV_PART_MAIN | LV_STATE_DEFAULT );
 lv_obj_set_style_bg_opa(ui_bar_fuel, 100, LV_PART_MAIN| LV_STATE_DEFAULT);
@@ -187,6 +212,7 @@ lv_obj_set_style_bg_opa(ui_bar_fuel, 255, LV_PART_INDICATOR| LV_STATE_DEFAULT);
 
 //Compensating for LVGL9.1 draw crash with bar/slider max value when top-padding is nonzero and right-padding is 0
 if (lv_obj_get_style_pad_top(ui_bar_fuel,LV_PART_MAIN) > 0) lv_obj_set_style_pad_right( ui_bar_fuel, lv_obj_get_style_pad_right(ui_bar_fuel,LV_PART_MAIN) + 1, LV_PART_MAIN );
+
 ui_odometer_mi_char = lv_label_create(ui_screen_cluster);
 lv_obj_set_width( ui_odometer_mi_char, LV_SIZE_CONTENT);  /// 1
 lv_obj_set_height( ui_odometer_mi_char, LV_SIZE_CONTENT);   /// 1
@@ -194,7 +220,7 @@ lv_obj_set_x( ui_odometer_mi_char, 543 );
 lv_obj_set_y( ui_odometer_mi_char, 280 );
 lv_obj_set_align( ui_odometer_mi_char, LV_ALIGN_CENTER );
 lv_label_set_text(ui_odometer_mi_char,"mi");
-lv_obj_remove_flag( ui_odometer_mi_char, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE | LV_OBJ_FLAG_SNAPPABLE );    /// Flags
+//lv_obj_remove_flag( ui_odometer_mi_char, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE | LV_OBJ_FLAG_SNAPPABLE );    /// Flags
 lv_obj_set_style_text_font(ui_odometer_mi_char, &lv_font_montserrat_20, LV_PART_MAIN| LV_STATE_DEFAULT);
 
 ui_bar_segement_overlay_ = lv_image_create(ui_screen_cluster);
@@ -204,7 +230,7 @@ lv_obj_set_height( ui_bar_segement_overlay_, LV_SIZE_CONTENT);   /// 1
 lv_obj_set_x( ui_bar_segement_overlay_, -583 );
 lv_obj_set_y( ui_bar_segement_overlay_, 64 );
 lv_obj_set_align( ui_bar_segement_overlay_, LV_ALIGN_CENTER );
-lv_obj_remove_flag( ui_bar_segement_overlay_, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE | LV_OBJ_FLAG_SNAPPABLE | LV_OBJ_FLAG_SCROLLABLE );    /// Flags
+//lv_obj_remove_flag( ui_bar_segement_overlay_, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE | LV_OBJ_FLAG_SNAPPABLE | LV_OBJ_FLAG_SCROLLABLE );    /// Flags
 
 ui_temperature_icon = lv_label_create(ui_screen_cluster);
 lv_obj_set_width( ui_temperature_icon, LV_SIZE_CONTENT);  /// 1
@@ -213,7 +239,7 @@ lv_obj_set_x( ui_temperature_icon, 567 );
 lv_obj_set_y( ui_temperature_icon, 195 );
 lv_obj_set_align( ui_temperature_icon, LV_ALIGN_CENTER );
 lv_label_set_text(ui_temperature_icon,"");
-lv_obj_remove_flag( ui_temperature_icon, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE | LV_OBJ_FLAG_SNAPPABLE );    /// Flags
+//lv_obj_remove_flag( ui_temperature_icon, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE | LV_OBJ_FLAG_SNAPPABLE );    /// Flags
 lv_obj_set_style_text_color(ui_temperature_icon, lv_color_hex(0x808080), LV_PART_MAIN | LV_STATE_DEFAULT );
 lv_obj_set_style_text_opa(ui_temperature_icon, 255, LV_PART_MAIN| LV_STATE_DEFAULT);
 lv_obj_set_style_text_font(ui_temperature_icon, &ui_font_fa_regular_icons_30, LV_PART_MAIN| LV_STATE_DEFAULT);
@@ -225,9 +251,11 @@ lv_obj_set_x( ui_battery_icon, -200 );
 lv_obj_set_y( ui_battery_icon, 280 );
 lv_obj_set_align( ui_battery_icon, LV_ALIGN_CENTER );
 lv_label_set_text(ui_battery_icon,"");
+
 lv_obj_set_style_text_color(ui_battery_icon, lv_color_hex(0x890820), LV_PART_MAIN | LV_STATE_DEFAULT );
 lv_obj_set_style_text_opa(ui_battery_icon, 255, LV_PART_MAIN| LV_STATE_DEFAULT);
 lv_obj_set_style_text_font(ui_battery_icon, &ui_font_fa_regular_icons_50, LV_PART_MAIN| LV_STATE_DEFAULT);
+//@TODO: configure differnet states for color, (0x890820 BLUE)
 lv_obj_set_style_text_color(ui_battery_icon, lv_color_hex(0x808080), LV_PART_MAIN | LV_STATE_DISABLED );
 lv_obj_set_style_text_opa(ui_battery_icon, 0, LV_PART_MAIN| LV_STATE_DISABLED);
 
@@ -238,15 +266,12 @@ lv_obj_set_x( ui_high_beam_icon, -100 );
 lv_obj_set_y( ui_high_beam_icon, 280 );
 lv_obj_set_align( ui_high_beam_icon, LV_ALIGN_CENTER );
 lv_label_set_text(ui_high_beam_icon,"	");
-lv_obj_add_flag( ui_high_beam_icon, LV_OBJ_FLAG_CHECKABLE );   /// Flags
-lv_obj_remove_flag( ui_high_beam_icon, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE | LV_OBJ_FLAG_SNAPPABLE );    /// Flags
+//lv_obj_add_flag( ui_high_beam_icon, LV_OBJ_FLAG_CHECKABLE );   /// Flags
+//lv_obj_remove_flag( ui_high_beam_icon, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE | LV_OBJ_FLAG_SNAPPABLE );    /// Flags
 lv_obj_set_style_text_color(ui_high_beam_icon, lv_color_hex(0x1E20C9), LV_PART_MAIN | LV_STATE_DEFAULT );
 lv_obj_set_style_text_opa(ui_high_beam_icon, 255, LV_PART_MAIN| LV_STATE_DEFAULT);
 lv_obj_set_style_text_font(ui_high_beam_icon, &ui_font_fa_regular_icons_50, LV_PART_MAIN| LV_STATE_DEFAULT);
-lv_obj_set_style_text_color(ui_high_beam_icon, lv_color_hex(0x1334BB), LV_PART_MAIN | LV_STATE_CHECKED );
-lv_obj_set_style_text_opa(ui_high_beam_icon, 255, LV_PART_MAIN| LV_STATE_CHECKED);
-lv_obj_set_style_text_color(ui_high_beam_icon, lv_color_hex(0x14D0CA), LV_PART_MAIN | LV_STATE_PRESSED );
-lv_obj_set_style_text_opa(ui_high_beam_icon, 255, LV_PART_MAIN| LV_STATE_PRESSED);
+
 lv_obj_set_style_text_color(ui_high_beam_icon, lv_color_hex(0x808080), LV_PART_MAIN | LV_STATE_DISABLED );
 lv_obj_set_style_text_opa(ui_high_beam_icon, 0, LV_PART_MAIN| LV_STATE_DISABLED);
 
@@ -257,6 +282,7 @@ lv_obj_set_x( ui_engine_icon_, 0 );
 lv_obj_set_y( ui_engine_icon_, 277 );
 lv_obj_set_align( ui_engine_icon_, LV_ALIGN_CENTER );
 lv_label_set_text(ui_engine_icon_,"	");
+//@TODO: configure differnet states for color
 lv_obj_set_style_text_color(ui_engine_icon_, lv_color_hex(0xFFBF00), LV_PART_MAIN | LV_STATE_DEFAULT );
 lv_obj_set_style_text_opa(ui_engine_icon_, 255, LV_PART_MAIN| LV_STATE_DEFAULT);
 lv_obj_set_style_text_font(ui_engine_icon_, &ui_font_fa_regular_icons_50, LV_PART_MAIN| LV_STATE_DEFAULT);
