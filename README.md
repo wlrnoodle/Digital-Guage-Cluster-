@@ -1,4 +1,6 @@
-# Esp32 Round Display for a digital gauge cluster
+# Esp32 7in Display for a digital gauge cluster
+<br>
+![alt text](<../Cluster_Imagess_Prototypes/Cluster Display v1.2.png>)
 
 This project is source-available and free for personal and educational use.
 Commercial use is NOT permitted.
@@ -15,8 +17,6 @@ Commercial use is NOT permitted.
 5. Set target device to esp32p4(see "Description of Bottom Toolbar of VSCode User Interface" in the waveshare link above)
 6. Build 
 7. Flash
-<br>
-
 
 # CANBUS
 For canbus integration, I have added a few CAN protocols(haltech, hondata, etc). 
