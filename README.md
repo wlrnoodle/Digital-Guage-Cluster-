@@ -1,6 +1,6 @@
 # Esp32 7in Display for a digital gauge cluster
 <br>
-<img src="/cluster_images/dash_gauge_v1.2.png" alt="Alt text" width="400" />   
+<img src="/cluster_images/dash_gauge_v1.2.png" alt="Alt text" width="600" />   
 This project is source-available and free for personal and educational use.
 Commercial use is NOT permitted.
 
