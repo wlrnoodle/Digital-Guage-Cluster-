@@ -5,6 +5,8 @@
 
 #include "ui.h"
 #include "ui_helpers.h"
+#include "boot/boot_screen.h"
+
 
 ///////////////////// VARIABLES ////////////////////
 
