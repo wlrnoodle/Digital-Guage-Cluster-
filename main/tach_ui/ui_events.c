@@ -3,3 +3,14 @@
 // LVGL version: 9.1.0
 // Project name: Cluster_Display_v1.2.0
 
+#include "ui.h"
+
+void gear_value_change(lv_event_t * e)
+{
+	// Your code here
+}
+
+void rpm_arc_value_changed(lv_event_t * e)
+{
+	// Your code here
+}

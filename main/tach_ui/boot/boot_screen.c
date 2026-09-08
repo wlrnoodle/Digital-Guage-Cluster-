@@ -1,6 +1,8 @@
 #include "boot_screen.h"
 #include "ui.h"
 
+
+
 lv_obj_t *boot_screen= NULL;
 static lv_obj_t *boot_logo;
 
@@ -12,14 +14,14 @@ static void logo_opa_cb(void *obj, int32_t v)
 }
 
 /* ---------- Create Screen ---------- */
-void boot_screen_create(void)
-{
+
+void boot_screen_create(void){
     boot_screen = lv_obj_create(NULL);
     lv_obj_set_style_bg_color(boot_screen, lv_color_black(), 0);
     lv_obj_set_style_bg_opa(boot_screen, LV_OPA_COVER, 0);
 
     boot_logo = lv_img_create(boot_screen);
-    lv_img_set_src(boot_logo, &ui_img_sti_logo_png);
+    //lv_img_set_src(boot_logo,BOOT_UI_IMG);
     lv_obj_center(boot_logo);
     lv_obj_set_style_opa(boot_logo, LV_OPA_0, 0);
 
@@ -30,6 +32,7 @@ void boot_screen_create(void)
 }
 
 /* ---------- Start Animation ---------- */
+
 void boot_start(void)
 {
     lv_scr_load(boot_screen);
@@ -57,3 +60,5 @@ void boot_finish(lv_obj_t *next_screen)
         boot_screen = NULL;
     }
 }
+
+
