@@ -27,6 +27,12 @@ You will need to purchase a [small can transciever](https://a.co/d/09CiRq2o) for
 Also, the sensor source on line 37 of the main.c file needs to be updated to 
 ```SENSOR_SOURCE_CAN``` as the default for this code is the analog/non-canbus sensors
 
+# Wiring
+For wiring ***** HONDA CBR600RR 2007-2025 ***** only . Some models include ABS & TCS, this model does NOT , ABS & TCS will not be accounted for!
+<br>
+<br>
+<imgh src="/cluster_images/cluster_wiring.png" alt ="Alt text" width="600"/>
+
 ## Issues/bug fixes
 
 ### 7 in waveshare round screens
