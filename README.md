@@ -31,7 +31,7 @@ Also, the sensor source on line 37 of the main.c file needs to be updated to
 For wiring ***** HONDA CBR600RR 2007-2025 ***** only . Some models include ABS & TCS, this model does NOT , ABS & TCS will not be accounted for!
 <br>
 <br>
-<imgh src="/cluster_images/cluster_wiring.png" alt ="Alt text" width="600"/>
+<img src="/cluster_images/cluster_wiring.png" alt ="Alt text" width="600"/>
 
 ## Issues/bug fixes
 
