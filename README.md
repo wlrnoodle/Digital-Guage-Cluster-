@@ -28,7 +28,8 @@ Also, the sensor source on line 37 of the main.c file needs to be updated to
 ```SENSOR_SOURCE_CAN``` as the default for this code is the analog/non-canbus sensors
 
 # Wiring
-For wiring ***** HONDA CBR600RR 2007-2025 ***** only . Some models include ABS & TCS, this model does NOT , ABS & TCS will not be accounted for!
+ ###***** HONDA CBR600RR 2007-2025. Caution: Some models include ABS & TCS, this model does NOT , ABS & TCS will not be accounted for!***** ###  
+Connnect each analong wire to each appropriate GPIO pin on the ESP32-P4 board. See code for which GPIO headers are being used "/main/main.c". Feel free to change as needed.
 <br>
 <br>
 <img src="/cluster_images/cluster_wiring.png" alt ="Alt text" width="600"/>
