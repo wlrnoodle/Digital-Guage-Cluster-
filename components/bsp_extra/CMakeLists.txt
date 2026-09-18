@@ -17,4 +17,5 @@ idf_component_register(
     INCLUDE_DIRS ${INCLUDE_DIRS}
     REQUIRES driver
     PRIV_REQUIRES esp_timer fatfs esp_psram esp_mm
+    REQUIRES esp_driver_ledc
 )
