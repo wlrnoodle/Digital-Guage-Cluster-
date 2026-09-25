@@ -18,7 +18,8 @@
 #include <string.h>
 #include <stdint.h>
 #include <math.h>
-#include "driver/adc.h"
+//#include "driver/adc.h" Deprecated Driver
+#include "esp_adc/adc_oneshot.h"
 #include "driver/pulse_cnt.h"
 #include "esp_timer.h"
 #include "gps_wrapper.h"
@@ -50,27 +51,31 @@
 #define UART1_TX_PIN 30
 
 //Water Temp - GPIO 20
-#define WATER_TEMP_ADC_CHANNEL ADC1_CHANNEL_4
+#define WATER_TEMP_ADC_CHANNEL ADC_CHANNEL_4
 
 //Oil Temp - GPIO 50
-#define OIL_TEMP_ADC_CHANNEL ADC2_CHANNEL_1
+#define OIL_TEMP_ADC_CHANNEL ADC_CHANNEL_1
 
 // Boost - GPIO 52
-#define BOOST_ADC_CHANNEL ADC2_CHANNEL_3
+#define BOOST_ADC_CHANNEL ADC_CHANNEL_3
 
 //Oil Pressure - GPIO 21
-#define OIL_PRESSURE_ADC_CHANNEL ADC1_CHANNEL_5
+#define OIL_PRESSURE_ADC_CHANNEL ADC_CHANNEL_5
 
 //Fuel Pressure - GPIO 22
-#define FUEL_PRESSURE_ADC_CHANNEL ADC1_CHANNEL_6
+#define FUEL_PRESSURE_ADC_CHANNEL ADC_CHANNEL_6
 
 #define TACH_GPIO GPIO_NUM_5
 
 // AFR - GPIO 49
-#define AFR_ADC_CHANNEL ADC2_CHANNEL_0 
+#define AFR_ADC_CHANNEL ADC_CHANNEL_0
 
 // Fuel level - GPIO 51
-#define FUEL_ADC_CHANNEL ADC2_CHANNEL_2
+#define FUEL_ADC_CHANNEL ADC_CHANNEL_2
+
+static adc_oneshot_unit_handle_t adc1_handle;
+static adc_oneshot_unit_handle_t adc2_handle;
+
 
 //--------------------------//
 
@@ -310,7 +315,7 @@ static void update_label_if_needed(lv_obj_t *label, char *new_value, lv_color_t 
     } 
     // Only update color if changed 
     lv_color_t old_color = lv_obj_get_style_text_color(label, LV_PART_MAIN); 
-    if (old_color.full != new_color.full) { 
+    if (old_color.green != new_color.green) { 
         lv_obj_set_style_text_color(label, new_color, LV_PART_MAIN); 
     } 
 }
@@ -322,8 +327,6 @@ static uint8_t clamp_u8(int val) {
 }
 
 //-----------------------FUEL---------------------------//
-
-
 
 float fuel_pct_from_voltage(float v){
     const float V_FULL  = 0.06f;
@@ -567,15 +570,16 @@ void tach_set_rpm(int rpm){
     else
         new_color = green_color;
 
-    // Only change color if needed
-    if (new_color.full != current_color.full) {
-        lv_obj_set_style_arc_color(ui_rpm_arc,
+    // Only change color if needed 
+    
+    if (new_color.red != current_color.green) {
+        lv_obj_set_style_arc_color(ui_arc_rpm ,
                                    new_color,
                                    LV_PART_INDICATOR);
         current_color = new_color;
     }
 
-    lv_arc_set_value(ui_rpm_arc, rpm);
+    lv_arc_set_value(ui_arc_rpm, rpm);
 }
 
 
@@ -589,7 +593,7 @@ void gauge_timer(lv_timer_t * t) {
     double miles = odometer_get_miles();
     char odo_buf[16];
     snprintf(odo_buf, sizeof(odo_buf), "%06.1f", miles);
-    update_label_if_needed(ui_label_odometer_value, odo_buf, green_color);
+    update_label_if_needed(ui_odometer_value, odo_buf, green_color);
 
 
     // -------- GEAR DETECTION -------- //
@@ -601,9 +605,9 @@ void gauge_timer(lv_timer_t * t) {
 
     float speed_for_gear = g_speed_mph;
 
-    if (speed_for_gear < GPS_MIN_VALID_MPH)
+    if (speed_for_gear < GPS_MIN_VALID_MPH){
         speed_for_gear = 0.0f;
-
+    }
     int gear = detect_gear(rpmNow, speed_for_gear, dt);
 
     static int last_displayed = -1;
@@ -611,15 +615,16 @@ void gauge_timer(lv_timer_t * t) {
     if (gear != last_displayed) {
 
         if(gear == -1) {
-            update_label_if_needed(ui_label_gear_value, "N", purple_color);
-        } else {
+            update_label_if_needed(ui_gear_value, "N", purple_color);
+        } else{
             char buf[2];
             snprintf(buf, sizeof(buf), "%d", gear);
-            update_label_if_needed(ui_label_gear_value, buf, purple_color);
+            update_label_if_needed(ui_gear_value, buf, purple_color);
         }
 
         last_displayed = gear;
     }
+    
 
     if (SENSOR_SOURCE == SENSOR_SOURCE_CAN){
         float speed_mph = g_speed_mph;
@@ -630,7 +635,7 @@ void gauge_timer(lv_timer_t * t) {
         int speed = (int)speed_mph;
         static char buf[8];
         snprintf(buf, sizeof(buf), "%d", speed);
-        lv_label_set_text(ui_label_mph_value, buf);
+        lv_label_set_text(ui_mph_value_, buf);
 
         char afr_buf[12];
         snprintf(afr_buf, sizeof(afr_buf), "%4.1f", g_gauge_data.afr);
@@ -768,7 +773,7 @@ void gps_task(void *arg) {
             int speed_int = (int)new_speed;
 
             if (speed_int != last_speed) {
-                lv_async_call(speed_update_cb, ui_label_mph_value);
+                lv_async_call(speed_update_cb, ui_mph_value_);
                 last_speed = speed_int;
             }
             if (sats_used >= 5 && hdop < 3.5f && gps_location_updated()){
@@ -808,7 +813,7 @@ void gps_task(void *arg) {
 
         } else {
             g_speed_mph = 0;                
-            lv_async_call(speed_update_cb, ui_label_mph_value);
+            lv_async_call(speed_update_cb, ui_mph_value_);
         }
         #if ENABLE_LOGS
             ESP_LOGI(TAG_GPS,
@@ -827,37 +832,55 @@ void gps_task(void *arg) {
 
 //------------------------------ADC_UART---------------------------------------//
 static void adc_global_init(void) {
-    adc1_config_width(ADC_WIDTH);
+      // Init ADC1 unit
+    adc_oneshot_unit_init_cfg_t init_config1 = {
+        .unit_id = ADC_UNIT_1,
+    };
+    ESP_ERROR_CHECK(adc_oneshot_new_unit(&init_config1, &adc1_handle));
+
+    // Init ADC2 unit
+    adc_oneshot_unit_init_cfg_t init_config2 = {
+        .unit_id = ADC_UNIT_2,
+    };
+    ESP_ERROR_CHECK(adc_oneshot_new_unit(&init_config2, &adc2_handle));
+
+    adc_oneshot_chan_cfg_t chan_config = {
+        .bitwidth = INT_WIDTH,         
+        .atten = ADC_ATTEN_DB_12,
+    };
 
     // ADC1 channels
-    adc1_config_channel_atten(WATER_TEMP_ADC_CHANNEL, ADC_ATTEN_DB_11);
-    adc1_config_channel_atten(OIL_PRESSURE_ADC_CHANNEL, ADC_ATTEN_DB_11);
-    adc1_config_channel_atten(FUEL_PRESSURE_ADC_CHANNEL, ADC_ATTEN_DB_11);
-    
+    ESP_ERROR_CHECK(adc_oneshot_config_channel(adc1_handle, WATER_TEMP_ADC_CHANNEL, &chan_config));
+    ESP_ERROR_CHECK(adc_oneshot_config_channel(adc1_handle, OIL_PRESSURE_ADC_CHANNEL, &chan_config));
+    ESP_ERROR_CHECK(adc_oneshot_config_channel(adc1_handle, FUEL_PRESSURE_ADC_CHANNEL, &chan_config));
 
     // ADC2 channels
-    adc2_config_channel_atten(BOOST_ADC_CHANNEL, ADC_ATTEN_DB_11);
-    adc2_config_channel_atten(OIL_TEMP_ADC_CHANNEL, ADC_ATTEN_DB_11);
-    adc2_config_channel_atten(FUEL_ADC_CHANNEL, ADC_ATTEN_DB_11);
-    adc2_config_channel_atten(AFR_ADC_CHANNEL, ADC_ATTEN_DB_11);
+    ESP_ERROR_CHECK(adc_oneshot_config_channel(adc2_handle, BOOST_ADC_CHANNEL, &chan_config));
+    ESP_ERROR_CHECK(adc_oneshot_config_channel(adc2_handle, OIL_TEMP_ADC_CHANNEL, &chan_config));
+    ESP_ERROR_CHECK(adc_oneshot_config_channel(adc2_handle, FUEL_ADC_CHANNEL, &chan_config));
+    ESP_ERROR_CHECK(adc_oneshot_config_channel(adc2_handle, AFR_ADC_CHANNEL, &chan_config));
 
     ESP_LOGI("ADC", "ADC Global Init Complete");
 }
 
-uint32_t sample_sum_adc1(adc1_channel_t adc_channel, int samples){
+uint32_t sample_sum_adc1(adc_channel_t adc_channel, int samples) {
     uint32_t sum = 0;
-    for (int i = 0; i < samples; i++) {
-        sum += adc1_get_raw(adc_channel);
+    int raw = 0;
+
+    for (int i = 0; i < samples; i++){
+        ESP_ERROR_CHECK(adc_oneshot_read(adc1_handle, adc_channel, &raw));
+        sum += raw;
     }
+
     return sum / samples;
 }
 
-uint32_t sample_sum_adc2(adc2_channel_t adc_channel, int samples){
+uint32_t sample_sum_adc2(adc_channel_t adc_channel, int samples) {
     uint32_t sum = 0;
     int raw = 0;
 
     for (int i = 0; i < samples; i++) {
-        adc2_get_raw(adc_channel, ADC_WIDTH, &raw);
+        ESP_ERROR_CHECK(adc_oneshot_read(adc2_handle, adc_channel, &raw));
         sum += raw;
     }
 
@@ -942,44 +965,44 @@ static void adc_task(void *arg) {
             g_gauge_data.oil_pressure_psi = oil_press_filtered;
 
             // ---------- Boost pressure (ADC2) ----------
-            int raw_boost;
-            adc2_get_raw(BOOST_ADC_CHANNEL, ADC_WIDTH, &raw_boost);
-            float voltage_boost = ((float)raw_boost / 4095.0f) * ADC_VREF;
-            // Undo any voltage divider if present
-            float sensor_voltage = voltage_boost / BOOST_DIVIDER_SCALE;
-            // Prosport sender scales ~1V @ 0 PSI to ~4V @ ~43.5 PSI
-            float pressure_psi = (sensor_voltage - BOOST_ZERO_OFFSET) * 14.5f;
-            pressure_psi += BOOST_OFFSET;
-            // Clamp to realistic limits
-            if (pressure_psi < -15.0f) pressure_psi = -15.0f;
-            if (pressure_psi > 45.0f)  pressure_psi = 45.0f;
-            //Simple EMA filter
-            static float boost_filtered = 0.0f;
-            boost_filtered = boost_filtered * (1 - BOOST_FILTER_ALPHA)
-                            + pressure_psi * BOOST_FILTER_ALPHA;
-            g_gauge_data.boost_psi = boost_filtered;
+            // int raw_boost;
+            // adc2_get_raw(BOOST_ADC_CHANNEL, ADC_WIDTH, &raw_boost);
+            // float voltage_boost = ((float)raw_boost / 4095.0f) * ADC_VREF;
+            // // Undo any voltage divider if present
+            // float sensor_voltage = voltage_boost / BOOST_DIVIDER_SCALE;
+            // // Prosport sender scales ~1V @ 0 PSI to ~4V @ ~43.5 PSI
+            // float pressure_psi = (sensor_voltage - BOOST_ZERO_OFFSET) * 14.5f;
+            // pressure_psi += BOOST_OFFSET;
+            // // Clamp to realistic limits
+            // if (pressure_psi < -15.0f) pressure_psi = -15.0f;
+            // if (pressure_psi > 45.0f)  pressure_psi = 45.0f;
+            // //Simple EMA filter
+            // static float boost_filtered = 0.0f;
+            // boost_filtered = boost_filtered * (1 - BOOST_FILTER_ALPHA)
+            //                 + pressure_psi * BOOST_FILTER_ALPHA;
+            // g_gauge_data.boost_psi = boost_filtered;
 
         }
 
         // ---------- Wideband AFR (ADC2) ---------- //
-        if (now_ms - last_afr_ms >= AFR_UPDATE_DELAY) { 
-            last_afr_ms = now_ms; 
-            int raw_afr; 
-            adc2_get_raw(AFR_ADC_CHANNEL, ADC_WIDTH, &raw_afr); 
-            float adc_voltage = ((float)raw_afr / 4095.0f) * ADC_VREF; 
-            // Undo voltage divider to get actual AEM output voltage 
-            float wb_voltage = adc_voltage * AFR_DIVIDER_GAIN; 
-            // Apply AEM linear scaling (Page 11) 
-            float afr = (2.3750f * wb_voltage) + 7.3125f;
-            afr += AFR_OFFSET;
-            // Optional clamp for sanity 
-            if (afr < 7.0f) afr = 7.0f; 
-            if (afr > 22.0f) afr = 22.0f; 
-            // Simple EMA filter 
-            static float afr_filtered = 14.7f; 
-            afr_filtered = afr_filtered + AFR_FILTER_ALPHA * (afr - afr_filtered); 
-            g_gauge_data.afr = afr_filtered;
-        }
+        // if (now_ms - last_afr_ms >= AFR_UPDATE_DELAY) { 
+        //     last_afr_ms = now_ms; 
+        //     int raw_afr; 
+        //     adc2_get_raw(AFR_ADC_CHANNEL, ADC_WIDTH, &raw_afr); 
+        //     float adc_voltage = ((float)raw_afr / 4095.0f) * ADC_VREF; 
+        //     // Undo voltage divider to get actual AEM output voltage 
+        //     float wb_voltage = adc_voltage * AFR_DIVIDER_GAIN; 
+        //     // Apply AEM linear scaling (Page 11) 
+        //     float afr = (2.3750f * wb_voltage) + 7.3125f;
+        //     afr += AFR_OFFSET;
+        //     // Optional clamp for sanity 
+        //     if (afr < 7.0f) afr = 7.0f; 
+        //     if (afr > 22.0f) afr = 22.0f; 
+        //     // Simple EMA filter 
+        //     static float afr_filtered = 14.7f; 
+        //     afr_filtered = afr_filtered + AFR_FILTER_ALPHA * (afr - afr_filtered); 
+        //     g_gauge_data.afr = afr_filtered;
+        // }
 
         // ---------- Fuel Gauge Update ----------
         if (now_ms - last_fuel_ms >= FUEL_UPDATE_PERIOD) {
