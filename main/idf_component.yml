@@ -1,8 +1,9 @@
 ## IDF Component Manager Manifest File
 dependencies:
   lvgl/lvgl:
-    version: "9.3.0"
+    version: 9.3.0
     public: true
   espressif/esp_lv_decoder:
-    version: "0.4.3"
+    version: 0.4.3
   espressif/usb: '*'
+  espressif/cjson: '*'

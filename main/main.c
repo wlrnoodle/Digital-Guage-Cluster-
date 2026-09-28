@@ -1215,25 +1215,38 @@ static void can_mapping_task(void *arg){
 //------------------------------------------------------------------------//
 
 void app_main(void) {
-    bsp_display_cfg_t cfg = {
-        .lvgl_port_cfg = ESP_LVGL_PORT_INIT_CONFIG(),
-        .buffer_size = BSP_LCD_DRAW_BUFF_SIZE,
-        .double_buffer = BSP_LCD_DRAW_BUFF_DOUBLE,
-        .flags = {
-            .buff_dma = true,
-            .buff_spiram = false,
-            .sw_rotate = false,
-        }
-    };
+    // bsp_display_cfg_t cfg = {
+    //     .lvgl_port_cfg = ESP_LVGL_PORT_INIT_CONFIG(),
+    //     .buffer_size = BSP_LCD_DRAW_BUFF_SIZE,
+    //     .double_buffer = BSP_LCD_DRAW_BUFF_DOUBLE,
+    //     .flags = {
+    //         .buff_dma = true,
+    //         .buff_spiram = false,
+    //         .sw_rotate = false,
+    //     }
+    // };
+     bsp_display_cfg_t cfg = {
+        .lv_adapter_cfg = ESP_LV_ADAPTER_DEFAULT_CONFIG(),
+        .rotation = ESP_LV_ADAPTER_ROTATE_0,
+        .tear_avoid_mode = ESP_LV_ADAPTER_TEAR_AVOID_MODE_TRIPLE_PARTIAL,
+        .touch_flags = {
+            .swap_xy = 0,
+            .mirror_x = 0,
+            .mirror_y = 0
+        }};
+    bsp_display_start_with_config(&cfg);
+    bsp_display_backlight_on();
     lv_display_t *disp = bsp_display_start_with_config(&cfg);
 
+    // TEST: LV DEMO 
+    //lv_demo_widgets();
     adc_global_init();
     init_label_styles();
     tach_init();
     odometer_init();
-
+ 
     ui_init();
-    lv_timer_create(gauge_timer, 10, NULL);
+    lv_timer_create(gauge_timer, 10, NULL); 
 
     uart_init(UART_PORT, UART_TX_PIN, UART_PIN_NO_CHANGE, UART_TX_BUF_SIZE, UART_BAUD_RATE); 
     uart_init(UART1_PORT, UART1_TX_PIN, UART_PIN_NO_CHANGE, UART_TX_BUF_SIZE, UART_BAUD_RATE); 

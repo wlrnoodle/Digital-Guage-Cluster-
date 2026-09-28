@@ -47,6 +47,16 @@ dependencies:
       registry_url: https://components.espressif.com
       type: service
     version: 4.2.1
+  espressif/cjson:
+    component_hash: e788323270d90738662d66fffa910bfe1fba019bba087f01557e70c40485b469
+    dependencies:
+    - name: idf
+      require: private
+      version: '>=5.0'
+    source:
+      registry_url: https://components.espressif.com/
+      type: service
+    version: 1.7.19~2
   espressif/cmake_utilities:
     component_hash: 351350613ceafba240b761b4ea991e0f231ac7a9f59a9ee901f751bddc0bb18f
     dependencies:
@@ -259,7 +269,7 @@ dependencies:
       type: service
     version: 1.1.0
   espressif/libpng:
-    component_hash: b8c715f76b79a127d9b1b632e09acc23e7b29d2194af890a837adc2be5a2804b
+    component_hash: d094357a329f78668629d7c9656064b2b0123196eb6d25ca77db3782e0752480
     dependencies:
     - name: idf
       require: private
@@ -271,7 +281,7 @@ dependencies:
     source:
       registry_url: https://components.espressif.com
       type: service
-    version: 1.6.58~1
+    version: 1.6.58~2
   espressif/usb:
     component_hash: 6c2cff118141dbbca181d0d27d71801fdddfc78f7ac03ae43f6e5a8cbd89cb99
     dependencies:
@@ -351,11 +361,12 @@ dependencies:
 direct_dependencies:
 - chmorgan/esp-audio-player
 - chmorgan/esp-file-iterator
+- espressif/cjson
 - espressif/esp_lv_decoder
 - espressif/usb
 - idf
 - lvgl/lvgl
 - waveshare/esp32_p4_wifi6_touch_lcd_xc
-manifest_hash: 23adb42c580a6ee9095c07450967841fca80473770a6f349e03eaadede25e7c6
+manifest_hash: cdc8d60e87a08a7ca5433b67fc47c4ef7d26637886a82fd22835615936d64e6e
 target: esp32p4
 version: 3.0.0
