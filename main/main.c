@@ -781,7 +781,7 @@ void gps_task(void *arg) {
                 double current_lon = gps_get_lon();
                 
                 //----- Lap timer(comment out if not needed )------//
-                lap_timer_update(current_lat, current_lon, new_speed, has_fix);
+                // lap_timer_update(current_lat, current_lon, new_speed, has_fix);
                 //------------------------------------------------//
 
                 if (first_fix) {
@@ -844,9 +844,9 @@ static void adc_global_init(void) {
     };
     ESP_ERROR_CHECK(adc_oneshot_new_unit(&init_config2, &adc2_handle));
 
-    adc_oneshot_chan_cfg_t chan_config = {
-        .bitwidth = INT_WIDTH,         
+    adc_oneshot_chan_cfg_t chan_config = {       
         .atten = ADC_ATTEN_DB_12,
+        .bitwidth = ADC_BITWIDTH_DEFAULT,
     };
 
     // ADC1 channels
@@ -1234,19 +1234,21 @@ void app_main(void) {
             .mirror_x = 0,
             .mirror_y = 0
         }};
-    bsp_display_start_with_config(&cfg);
-    bsp_display_backlight_on();
     lv_display_t *disp = bsp_display_start_with_config(&cfg);
+    
+    bsp_display_backlight_on();
+    bsp_display_brightness_set(80); // Set to a visible level (0-100)
+
 
     // TEST: LV DEMO 
     //lv_demo_widgets();
     adc_global_init();
     init_label_styles();
     tach_init();
-    odometer_init();
+    // odometer_init();
  
     ui_init();
-    lv_timer_create(gauge_timer, 10, NULL); 
+    // lv_timer_create(gauge_timer, 50, NULL); 
 
     uart_init(UART_PORT, UART_TX_PIN, UART_PIN_NO_CHANGE, UART_TX_BUF_SIZE, UART_BAUD_RATE); 
     uart_init(UART1_PORT, UART1_TX_PIN, UART_PIN_NO_CHANGE, UART_TX_BUF_SIZE, UART_BAUD_RATE); 
@@ -1264,8 +1266,8 @@ void app_main(void) {
 
     xTaskCreatePinnedToCore(save_miles_task, "save_miles_task", 4096, NULL, 4, NULL, 0);
 
-    bsp_display_backlight_off();
-    vTaskDelay(pdMS_TO_TICKS(100)); 
-    bsp_display_brightness_set(50); 
+    // bsp_display_backlight_off();
+    // vTaskDelay(pdMS_TO_TICKS(100)); 
+    // bsp_display_brightness_set(50); 
 
 }

@@ -28,22 +28,25 @@ lv_obj_t *ui_oil_icon_ = NULL;
 lv_obj_t *ui_HESD_icon = NULL;
 lv_obj_t *ui_temperature_value = NULL;
 
-// event funtions
-void ui_event_gear_value( lv_event_t * e) {
-    lv_event_code_t event_code = lv_event_get_code(e);
+// // event funtions
+// void ui_event_gear_value( lv_event_t * e) {
+//     lv_event_code_t event_code = lv_event_get_code(e);
+// }
+// // TODO: implement gear_value_change + rpm_arc_value_changed (SquareLine callbacks, currently stubbed)
+// __attribute__((weak)) void gear_value_change(lv_event_t * e) {}
+// __attribute__((weak)) void rpm_arc_value_changed(lv_event_t * e) {}
+// if ( event_code == LV_EVENT_VALUE_CHANGED) {
+//       gear_value_change( e );
+// }
+// }
 
-if ( event_code == LV_EVENT_VALUE_CHANGED) {
-      gear_value_change( e );
-}
-}
+// void ui_event_arc_rpm( lv_event_t * e) {
+//     lv_event_code_t event_code = lv_event_get_code(e);
 
-void ui_event_arc_rpm( lv_event_t * e) {
-    lv_event_code_t event_code = lv_event_get_code(e);
-
-if ( event_code == LV_EVENT_VALUE_CHANGED) {
-      rpm_arc_value_changed( e );
-}
-}
+// if ( event_code == LV_EVENT_VALUE_CHANGED) {
+//       rpm_arc_value_changed( e );
+// }
+// }
 
 // build funtions
 
@@ -167,7 +170,7 @@ lv_obj_set_style_arc_opa(ui_arc_rpm, 0, LV_PART_MAIN| LV_STATE_DEFAULT);
 lv_obj_set_style_outline_color(ui_arc_rpm, lv_color_hex(0x000000), LV_PART_INDICATOR | LV_STATE_DEFAULT );
 lv_obj_set_style_outline_opa(ui_arc_rpm, 255, LV_PART_INDICATOR| LV_STATE_DEFAULT);
 lv_obj_set_style_arc_color(ui_arc_rpm, lv_color_hex(0x398CDB), LV_PART_INDICATOR | LV_STATE_DEFAULT );
-lv_obj_set_style_arc_opa(ui_arc_rpm, 400, LV_PART_INDICATOR| LV_STATE_DEFAULT);
+lv_obj_set_style_arc_opa(ui_arc_rpm, LV_OPA_COVER, LV_PART_INDICATOR| LV_STATE_DEFAULT);
 lv_obj_set_style_arc_width(ui_arc_rpm, 25, LV_PART_INDICATOR| LV_STATE_DEFAULT);
 lv_obj_set_style_arc_rounded(ui_arc_rpm, false, LV_PART_INDICATOR| LV_STATE_DEFAULT);
 
@@ -320,8 +323,8 @@ lv_obj_set_align( ui_temperature_value, LV_ALIGN_CENTER );
 lv_label_set_text(ui_temperature_value,"000");
 lv_obj_set_style_text_font(ui_temperature_value, &ui_font_LiberstionSansBold_32_MPH, LV_PART_MAIN| LV_STATE_DEFAULT);
 
-lv_obj_add_event_cb(ui_gear_value, ui_event_gear_value, LV_EVENT_ALL, NULL);
-lv_obj_add_event_cb(ui_arc_rpm, ui_event_arc_rpm, LV_EVENT_ALL, NULL);
+// lv_obj_add_event_cb(ui_gear_value, ui_event_gear_value, LV_EVENT_ALL, NULL);
+// lv_obj_add_event_cb(ui_arc_rpm, ui_event_arc_rpm, LV_EVENT_ALL, NULL);
 
 }
 
