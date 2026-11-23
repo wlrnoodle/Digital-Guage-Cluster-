@@ -7,3 +7,4 @@ dependencies:
     version: 0.4.3
   espressif/usb: '*'
   espressif/cjson: '*'
+  waveshare/esp32_p4_nano: '*'

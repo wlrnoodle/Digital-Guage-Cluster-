@@ -8,8 +8,8 @@
 #include "esp_memory_utils.h"
 #include "bsp/esp-bsp.h"
 #include "bsp/display.h"
-#include "bsp_board_extra.h"
 #include "lvgl.h"
+#include "esp_lv_adapter.h"
 #include "lv_demos.h"
 #include "ui.h"
 #include "driver/uart.h"
@@ -45,7 +45,7 @@
 #define GPS_TX_PIN        UART_PIN_NO_CHANGE  
 
 //UART0 Transaction - GPIO 37
-#define UART_TX_PIN 37
+// #define UART_TX_PIN 37
 
 //UART1 Transaction - GPIO30
 #define UART1_TX_PIN 30
@@ -773,8 +773,12 @@ void gps_task(void *arg) {
             int speed_int = (int)new_speed;
 
             if (speed_int != last_speed) {
-                lv_async_call(speed_update_cb, ui_mph_value_);
-                last_speed = speed_int;
+                // lv_async_call touches LVGL's timer list, so it must hold the adapter lock
+                if (esp_lv_adapter_lock(10) == ESP_OK) {
+                    lv_async_call(speed_update_cb, ui_mph_value_);
+                    esp_lv_adapter_unlock();
+                    last_speed = speed_int;
+                }
             }
             if (sats_used >= 5 && hdop < 3.5f && gps_location_updated()){
                 double current_lat = gps_get_lat();
@@ -813,7 +817,10 @@ void gps_task(void *arg) {
 
         } else {
             g_speed_mph = 0;                
-            lv_async_call(speed_update_cb, ui_mph_value_);
+            if (esp_lv_adapter_lock(10) == ESP_OK) { 
+                lv_async_call(speed_update_cb, ui_mph_value_);
+                esp_lv_adapter_unlock();
+            }
         }
         #if ENABLE_LOGS
             ESP_LOGI(TAG_GPS,
@@ -1080,7 +1087,7 @@ static void adc_task(void *arg) {
             uint16_t crc = crc16_ccitt(&buf[1], GAUGE_PKT_LEN - 3);
             memcpy(&buf[GAUGE_PKT_LEN - 2], &crc, 2);
 
-            uart_write_bytes(UART_PORT, buf, GAUGE_PKT_LEN);
+            // uart_write_bytes(UART_PORT, buf, GAUGE_PKT_LEN);
             uart_write_bytes(UART1_PORT, buf, GAUGE_PKT_LEN);
         }
 
@@ -1203,7 +1210,7 @@ static void can_mapping_task(void *arg){
             uint16_t crc = crc16_ccitt(&buf[1], GAUGE_PKT_LEN - 3);
             memcpy(&buf[GAUGE_PKT_LEN - 2], &crc, 2);
 
-            uart_write_bytes(UART_PORT, buf, GAUGE_PKT_LEN);
+            // uart_write_bytes(UART_PORT, buf, GAUGE_PKT_LEN);
             uart_write_bytes(UART1_PORT, buf, GAUGE_PKT_LEN);
         }
 
@@ -1245,12 +1252,33 @@ void app_main(void) {
     adc_global_init();
     init_label_styles();
     tach_init();
-    // odometer_init();
+    odometer_init();
  
-    ui_init();
+    // ===== TEMP DISPLAY TEST: remove once the screen works =====
+    ESP_LOGI("TEST", "display handle: %p", (void *)disp);
+    if (esp_lv_adapter_lock(-1) == ESP_OK) {
+        lv_obj_t *scr = lv_screen_active();
+        lv_obj_set_style_bg_color(scr, lv_color_hex(0xFF0000), 0);
+        lv_obj_set_style_bg_opa(scr, LV_OPA_COVER, 0);
+        lv_obj_t *l = lv_label_create(scr);
+        lv_label_set_text(l, "DISPLAY TEST");
+        lv_obj_center(l);
+        esp_lv_adapter_unlock();
+    }
+    ESP_LOGI("TEST", "backlight set: %s",
+             esp_err_to_name(bsp_display_brightness_set(100)));
+    vTaskDelay(pdMS_TO_TICKS(3000));
+    // ===== END TEMP DISPLAY TEST =====
+
+    // The LVGL adapter task is already running here, so build the UI under its lock
+    if (esp_lv_adapter_lock(-1) == ESP_OK) {
+        ui_init();
+        lv_timer_create(gauge_timer, 50, NULL);
+        esp_lv_adapter_unlock();
+    }
     // lv_timer_create(gauge_timer, 50, NULL); 
 
-    uart_init(UART_PORT, UART_TX_PIN, UART_PIN_NO_CHANGE, UART_TX_BUF_SIZE, UART_BAUD_RATE); 
+    // uart_init(UART_PORT, UART_TX_PIN, UART_PIN_NO_CHANGE, UART_TX_BUF_SIZE, UART_BAUD_RATE); 
     uart_init(UART1_PORT, UART1_TX_PIN, UART_PIN_NO_CHANGE, UART_TX_BUF_SIZE, UART_BAUD_RATE); 
     uart_init(GPS_UART_NUM, UART_PIN_NO_CHANGE, GPS_RX_PIN, (GPS_BUF_SIZE*2), GPS_BAUD_RATE); 
 
