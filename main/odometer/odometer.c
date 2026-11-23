@@ -21,7 +21,7 @@ typedef struct {
 
 static nvs_handle_t odo_handle;
 
-static uint64_t total_meters = 3701491;   // compiled default
+static uint64_t total_meters = 0000000;   // compiled default
 static uint64_t last_saved_meters = 0;
 static uint32_t current_version = 0;
 static bool use_slot_a = true;

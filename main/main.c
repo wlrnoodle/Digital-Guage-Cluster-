@@ -290,6 +290,7 @@ static lv_color_t orange_color;
 static lv_color_t purple_color;
 static lv_color_t pink_color;
 static lv_color_t blue_color;
+static lv_color_t gray_color;
 
 static inline int constrain_int(int x, int low, int high) {
     if (x < low) return low;
@@ -300,6 +301,7 @@ static inline int constrain_int(int x, int low, int high) {
 static void init_label_styles(void){
 
     green_color = lv_color_hex(0x28FF00);
+    gray_color = lv_palette_main(LV_PALETTE_GREY);
     red_color = lv_palette_main(LV_PALETTE_RED);
     orange_color = lv_palette_main(LV_PALETTE_ORANGE);
     purple_color = lv_palette_main(LV_PALETTE_PURPLE);
@@ -593,7 +595,7 @@ void gauge_timer(lv_timer_t * t) {
     double miles = odometer_get_miles();
     char odo_buf[16];
     snprintf(odo_buf, sizeof(odo_buf), "%06.1f", miles);
-    update_label_if_needed(ui_odometer_value, odo_buf, green_color);
+    update_label_if_needed(ui_odometer_value, odo_buf, gray_color);
 
 
     // -------- GEAR DETECTION -------- //
@@ -1234,7 +1236,7 @@ void app_main(void) {
     // };
      bsp_display_cfg_t cfg = {
         .lv_adapter_cfg = ESP_LV_ADAPTER_DEFAULT_CONFIG(),
-        .rotation = ESP_LV_ADAPTER_ROTATE_0,
+        .rotation = ESP_LV_ADAPTER_ROTATE_90,
         .tear_avoid_mode = ESP_LV_ADAPTER_TEAR_AVOID_MODE_TRIPLE_PARTIAL,
         .touch_flags = {
             .swap_xy = 0,
@@ -1254,21 +1256,21 @@ void app_main(void) {
     tach_init();
     odometer_init();
  
-    // ===== TEMP DISPLAY TEST: remove once the screen works =====
-    ESP_LOGI("TEST", "display handle: %p", (void *)disp);
-    if (esp_lv_adapter_lock(-1) == ESP_OK) {
-        lv_obj_t *scr = lv_screen_active();
-        lv_obj_set_style_bg_color(scr, lv_color_hex(0xFF0000), 0);
-        lv_obj_set_style_bg_opa(scr, LV_OPA_COVER, 0);
-        lv_obj_t *l = lv_label_create(scr);
-        lv_label_set_text(l, "DISPLAY TEST");
-        lv_obj_center(l);
-        esp_lv_adapter_unlock();
-    }
-    ESP_LOGI("TEST", "backlight set: %s",
-             esp_err_to_name(bsp_display_brightness_set(100)));
-    vTaskDelay(pdMS_TO_TICKS(3000));
-    // ===== END TEMP DISPLAY TEST =====
+    // // ===== TEMP DISPLAY TEST: remove once the screen works =====
+    // ESP_LOGI("TEST", "display handle: %p", (void *)disp);
+    // if (esp_lv_adapter_lock(-1) == ESP_OK) {
+    //     lv_obj_t *scr = lv_screen_active();
+    //     lv_obj_set_style_bg_color(scr, lv_color_hex(0xFF0000), 0);
+    //     lv_obj_set_style_bg_opa(scr, LV_OPA_COVER, 0);
+    //     lv_obj_t *l = lv_label_create(scr);
+    //     lv_label_set_text(l, "DISPLAY TEST");
+    //     lv_obj_center(l);
+    //     esp_lv_adapter_unlock();
+    // }
+    // ESP_LOGI("TEST", "backlight set: %s",
+    //          esp_err_to_name(bsp_display_brightness_set(100)));
+    // vTaskDelay(pdMS_TO_TICKS(3000));
+    // // ===== END TEMP DISPLAY TEST =====
 
     // The LVGL adapter task is already running here, so build the UI under its lock
     if (esp_lv_adapter_lock(-1) == ESP_OK) {
